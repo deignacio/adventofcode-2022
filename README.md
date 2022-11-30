@@ -1,4 +1,4 @@
-# Advent of code Typescript Starter
+# Advent of Code 2022
 
 A simple [Advent of code](https://adventofcode.com/) starter project with Typescript and jest for testing.
 
@@ -20,4 +20,6 @@ For each day, where `X` is the day number (1-25):
 
 ## Credits
 
-Some code was liberally taken from https://github.com/stemmlerjs/simple-typescript-starter after some serious head-desking
+- This repo is forked from https://github.com/LBognanni/adventofcode-typescript-starter and subsequently modified.
+- Some code was liberally taken from https://github.com/stemmlerjs/simple-typescript-starter after some serious head-desking.
+
