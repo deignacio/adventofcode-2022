@@ -1,17 +1,19 @@
 import { Day } from "../day";
 
-const key = new Map<string, string>();
-key.set('X', 'A');
-key.set('Y', 'B');
-key.set('Z', 'C');
+const key: Record<string, string> = {
+    X: 'A',
+    Y: 'B',
+    Z: 'C',
+}
 
-const objScores = new Map<string, number>();
-objScores.set('A', 1);
-objScores.set('B', 2);
-objScores.set('C', 3);
+const objScores: Record<string, number> = {
+    A: 1,
+    B: 2,
+    C: 3
+}
 
 const decrypt = (value: string): string => {
-    return key.get(value)!
+    return key[value]!
 }
 
 // X = Lose, Y = Draw, Z = Win
@@ -71,38 +73,34 @@ class Day2 extends Day {
         super(2);
     }
 
-    playGame(line: string): number {
-        const choices = line.split(' ')
-        const yours = choices[0]
-        const mine = decrypt(choices[1])
-        const score = wins(yours, mine) + objScores.get(mine)!
-        // console.log(choices, yours, mine, score)
-        return score
-    }
-
     solveForPartOne(input: string): string {
         const lines = input.split(/\r?\n/)
         // console.log(lines)
-        const outcomes = lines.map(this.playGame)
+        const outcomes = lines.map(line => {
+            const choices = line.split(' ')
+            const yours = choices[0]
+            const mine = decrypt(choices[1])
+            const score = wins(yours, mine) + objScores[mine]!
+            // console.log(choices, yours, mine, score)
+            return score     
+        })
         // console.log(outcomes)
         var score = 0
         outcomes.forEach(outcome => score += outcome)
         return score +"";
     }
 
-    playGamePart2(line: string): number {
-        const choices = line.split(' ')
-        const yours = choices[0]
-        const mine = part2Decrypt(choices[0], choices[1])
-        const score = wins(yours, mine) + objScores.get(mine)!
-        // console.log(choices, yours, mine, score)
-        return score
-    }
-
     solveForPartTwo(input: string): string {
         const lines = input.split(/\r?\n/)
         // console.log(lines)
-        const outcomes = lines.map(this.playGamePart2)
+        const outcomes = lines.map(line => {
+            const choices = line.split(' ')
+            const yours = choices[0]
+            const mine = part2Decrypt(choices[0], choices[1])
+            const score = wins(yours, mine) + objScores[mine]!
+            // console.log(choices, yours, mine, score)
+            return score    
+        })
         // console.log(outcomes)
         var score = 0
         outcomes.forEach(outcome => score += outcome)
