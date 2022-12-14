@@ -1,4 +1,5 @@
 import { Day } from "../day";
+var GifEncoder = require('gif-encoder');
 
 type Coord = {
     x: number
@@ -71,6 +72,23 @@ const dump = (w: World): void => {
     console.log()
 }
 
+const frame = (w: World): Array<number> => {
+    const f: Array<number> = []
+    for (var y = -25; y < 175; y++) {
+        for (var x = 300; x < 700; x++) {
+            const b = w.world.get(toS(x, y))
+            if (b === Block.SAND) {
+                f.push(222, 135, 8, 0.8)
+            } else if (b === Block.WALL) {
+                f.push(55, 54, 108, 0.8)
+            } else {
+                f.push(244, 222, 233, 0.8)
+            }
+        }
+    }
+    return f
+}
+
 const buildWorld = (input: string): World => {
     const w = { world: new Map(), minX: 999, maxX: -1, minY: 999, maxY: -1 }
     const lines = input.split(/\r?\n/)
@@ -124,7 +142,7 @@ const addFloor = (w: World): void => {
     }
 }
 
-const dropSand = (w: World, p: Coord): Coord => {
+const dropSand = (w: World, p: Coord, g?: any): Coord => {
     var current:Coord = { x: p.x, y: p.y }
     while (true) {
         // down
@@ -174,8 +192,15 @@ class Day14 extends Day {
 
     solveForPartOne(input: string): string {
         const w = buildWorld(input)
+        const gif = new GifEncoder(400, 200)
+        var file = require('fs').createWriteStream('./src/day14/part1.gif')
+        gif.pipe(file)
+        gif.writeHeader()
         var count = 0
         while (count < 900) {
+            if (count % 25 == 0) {
+                gif.addFrame(frame(w))
+            }
             count++
             const rest = dropSand(w, {x: 500, y: 0})
             if (!within(w, rest)) {
@@ -187,14 +212,23 @@ class Day14 extends Day {
         }
         // dump(w)
         console.log(count-1)
+        gif.addFrame(frame(w))
+        gif.finish()
         return "";
     }
 
     solveForPartTwo(input: string): string {
         const w = buildWorld(input)
         addFloor(w)
+        const gif = new GifEncoder(400, 200)
+        var file = require('fs').createWriteStream('./src/day14/part2.gif')
+        gif.pipe(file)
+        gif.writeHeader()
         var count = 0
         while (count < 100500) {
+            if (count % 1000 == 0) {
+                gif.addFrame(frame(w))
+            }
             count++
             const rest = dropSand(w, {x: 500, y: 0})
             if (rest.x == 500 && rest.y == 0) {
@@ -208,6 +242,8 @@ class Day14 extends Day {
         console.log(w.minX, w.maxX, w.minY, w.maxY)
         dump(w)
         console.log(count)
+        gif.addFrame(frame(w))
+        gif.finish()
         return "";
     }
 }
